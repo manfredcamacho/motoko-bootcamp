@@ -1,24 +1,47 @@
-# Motoko Starter Template
+# Motoko Bootcamp
 
-Use this template to create your own repo.
+Hey there! This is where I'm going to be keeping track of my progress and the results of the Motoko Bootcamp that I'm currently participating in.
 
-Then implement your projects of Motoko Bootcamp Starter. 💪
+# What is the Motoko Bootcamp?
 
-Run specs and ensure you have green on your daily project ✅
+[The Motoko Bootcamp](https://github.com/motoko-bootcamp) is an awesome program that helps you learn Motoko, get started on the Internet Computer, and meet other builders - all in one week! It's a recurring event that happens every three months, and it's available online so you can join from anywhere in the world.
 
-## Getting Started
+## Prerequisites
 
-Video walkthroughs:
+- ### Check versions of installed tools:
 
-English: https://www.loom.com/share/0743532e645e4334af7765239c8ff0b7
+  ```
+  node --version # v18.13.0
+  npm --version  # 9.5.*
+  dfx --version  # 0.14.0
+  ```
 
-Spanish: https://www.loom.com/share/52019fd23bb245968836499d952b3d5c
+- ### dfx install
 
-## How to deploy (in same canister)
+  `sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"`
 
-English: https://www.loom.com/share/0b2ade90056944afad083ba5f3b07532
+- ### Create identity
 
-Spanish: https://www.loom.com/share/c0eeadbc613a4548868507c990e5dea3
+  `dfx identity new <your_identity_alias>`
+
+- ### Activate newly created identity
+
+  `dfx identity use <your_identity_alias>`
+
+## Install
+
+`npm install`
+
+## Check canister locally
+
+```
+dfx start --clean --background
+dfx deploy day1
+```
+
+You can change the name of the canister, for example:
+
+`dfx deploy day2`
 
 ## Testing
 
@@ -31,11 +54,3 @@ For running specs, on a terminal:
 ...
 
 `npm run test` (for running all specs)
-
-## Formatting
-
-For running prettier:
-
-`npm run prettier`
-
-
