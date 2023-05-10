@@ -35,6 +35,13 @@ let success = run([
           assertTrue(id == 0);
         },
       ),
+      it(
+        "Should have 1 homework",
+        do {
+          let response = await day2Actor.getAllHomework();
+          assertTrue(response.size() == 1);
+        },
+      ),
     ],
   ),
   describe(
@@ -62,16 +69,16 @@ let success = run([
       it(
         "should update an existent Homework",
         do {
+          ignore await day2Actor.addHomework(homeworkTest);
           let homeworkTest2 : Type.Homework = {
             title = "Test2";
             description = "Test";
             dueDate = Time.now();
             completed = false;
           };
-
-          let response = await day2Actor.updateHomework(0, homeworkTest2);
+          let response = await day2Actor.updateHomework(1, homeworkTest2);
           switch (response) {
-            case (#ok(homework)) {
+            case (#ok(_)) {
               true;
             };
             case (#err(message)) {
@@ -80,15 +87,23 @@ let success = run([
           };
         },
       ),
+      it(
+        "Should have 2 homeworks and just one updated",
+        do {
+          let response = await day2Actor.getAllHomework();
+          assertTrue(response.size() == 2 and response[1].title == "Test2");
+        },
+      ),
     ],
   ),
   describe(
     "#markAsCompleted",
     [
       it(
-        "should mark as complete an existent Homework",
+        "should mark 1 homework as complete",
         do {
-          let response = await day2Actor.markAsCompleted(0);
+          ignore await day2Actor.addHomework(homeworkTest);
+          let response = await day2Actor.markAsCompleted(1);
           switch (response) {
             case (#ok) {
               true;
@@ -97,6 +112,13 @@ let success = run([
               Debug.trap("Homework not found");
             };
           };
+        },
+      ),
+      it(
+        "Should have 3 homeworks and just one marked as completed",
+        do {
+          let response = await day2Actor.getAllHomework();
+          assertTrue(response.size() == 3 and response[1].completed);
         },
       ),
     ],
@@ -118,6 +140,13 @@ let success = run([
           };
         },
       ),
+      it(
+        "Should have 2 homework",
+        do {
+          let response = await day2Actor.getAllHomework();
+          assertTrue(response.size() == 2);
+        },
+      ),
     ],
   ),
   describe(
@@ -128,7 +157,7 @@ let success = run([
         do {
           ignore await day2Actor.addHomework(homeworkTest);
           let response = await day2Actor.getAllHomework();
-          assertTrue(response.size() == 1);
+          assertTrue(response.size() == 3);
         },
       ),
     ],
@@ -137,11 +166,17 @@ let success = run([
     "#getPendingHomework",
     [
       it(
-        "should get Homework not completed",
+        "Should have 3 homeworks",
         do {
-          ignore await day2Actor.addHomework(homeworkTest);
+          let response = await day2Actor.getAllHomework();
+          assertTrue(response.size() == 3);
+        },
+      ),
+      it(
+        "should get 2 Homework not completed",
+        do {
           let response = await day2Actor.getPendingHomework();
-          assertTrue(response.size() == 1);
+          assertTrue(response.size() == 2);
         },
       ),
     ],
@@ -150,10 +185,17 @@ let success = run([
     "#searchHomework",
     [
       it(
-        "should return first match of term with title or description",
+        "should return 3 matchs of term with title or description `Test`",
         do {
           let response = await day2Actor.searchHomework("Test");
-          assertTrue(response[0].title == "Test");
+          assertTrue(response.size() == 3);
+        },
+      ),
+      it(
+        "should return 1 matchs of term with title or description `Test2`",
+        do {
+          let response = await day2Actor.searchHomework("Test2");
+          assertTrue(response.size() == 1);
         },
       ),
     ],
