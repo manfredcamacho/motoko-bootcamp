@@ -6,18 +6,20 @@ import Option "mo:base/Option";
 import Debug "mo:base/Debug";
 import Iter "mo:base/Iter";
 import Account "Account";
+
 // NOTE: only use for local dev,
 // when deploying to IC, import from "rww3b-zqaaa-aaaam-abioa-cai"
-//import BootcampLocalActor "BootcampLocalActor";
+import BootcampLocalActor "BootcampLocalActor";
+import Principal "mo:base/Principal";
 
 actor class MotoCoin() {
 
   let ledger : TrieMap.TrieMap<Account, Nat> = TrieMap.TrieMap<Account, Nat>(Account.accountsEqual, Account.accountsHash);
 
-  let BootcampLocalActor : actor {
+  //This Canister is a bootcamp actor on the IC
+  let bootcampICActor = actor ("rww3b-zqaaa-aaaam-abioa-cai") : actor {
     getAllStudentsPrincipal : shared () -> async [Principal];
-  } = actor ("rww3b-zqaaa-aaaam-abioa-cai"); //IC
-  //} = actor ("bkyz2-fmaaa-aaaaa-qaaaq-cai"); //Local
+  };
 
   public type Account = Account.Account;
 
@@ -61,9 +63,20 @@ actor class MotoCoin() {
     return #ok(());
   };
 
+  public func getAccounts() : async [Principal] {
+    let bootcampActor = await BootcampLocalActor.BootcampLocalActor(); //Local
+    let principals = await bootcampActor.getAllStudentsPrincipal();
+    principals;
+  };
+
   // Airdrop 100 MotoCoin to any student that is part of the Bootcamp.
   public func airdrop() : async Result.Result<(), Text> {
-    let principals = await BootcampLocalActor.getAllStudentsPrincipal();
+
+    // let bootcampActor = bootcampICActor; //IC
+    let bootcampActor = await BootcampLocalActor.BootcampLocalActor(); //Local
+
+    let principals = await bootcampActor.getAllStudentsPrincipal();
+
     for (principal in Iter.fromArray(principals)) {
       let account = {
         owner = principal;

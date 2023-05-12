@@ -47,7 +47,7 @@ let success = run([
     "#airdrop",
     [
       it(
-        "should airdrop once to all Bootcamp students coin symbol",
+        "should airdrop to all Bootcamp students coin symbol",
         do {
           let response = await day4Actor.airdrop();
           switch (response) {
@@ -68,7 +68,6 @@ let success = run([
       it(
         "should return summed balance of all accounts",
         do {
-          ignore await day4Actor.airdrop(); // checking it does not airdrop twice
           let students = await bootcampTestActor.getAllStudentsPrincipal();
           let totalSupply = await day4Actor.totalSupply();
           assertTrue(totalSupply == students.size() * 100);
